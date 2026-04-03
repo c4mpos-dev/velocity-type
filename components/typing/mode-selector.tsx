@@ -1,0 +1,141 @@
+'use client';
+
+import { Clock, Type, Quote, Hash, Code, AtSign, Percent } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { TestMode, TestDuration, TestWordCount } from '@/lib/typing-store';
+import { WordListType } from '@/lib/word-lists';
+import { useLocaleContext } from '@/components/locale-provider';
+
+interface ModeSelectorProps {
+  mode: TestMode;
+  wordList: WordListType;
+  duration: TestDuration;
+  wordCount: TestWordCount;
+  onModeChange: (mode: TestMode) => void;
+  onWordListChange: (wordList: WordListType) => void;
+  onDurationChange: (duration: TestDuration) => void;
+  onWordCountChange: (wordCount: TestWordCount) => void;
+  disabled?: boolean;
+}
+
+export function ModeSelector({
+  mode,
+  wordList,
+  duration,
+  wordCount,
+  onModeChange,
+  onWordListChange,
+  onDurationChange,
+  onWordCountChange,
+  disabled = false,
+}: ModeSelectorProps) {
+  const { t } = useLocaleContext();
+
+  const modes: { value: TestMode; label: string; icon: React.ReactNode }[] = [
+    { value: 'time', label: t('time'), icon: <Clock className="w-4 h-4" /> },
+    { value: 'words', label: t('words'), icon: <Type className="w-4 h-4" /> },
+    { value: 'quote', label: t('quote'), icon: <Quote className="w-4 h-4" /> },
+  ];
+
+  const wordLists: { value: WordListType; label: string; icon: React.ReactNode }[] = [
+    { value: 'common', label: t('common'), icon: <AtSign className="w-3.5 h-3.5" /> },
+    { value: 'medium', label: t('medium'), icon: <Hash className="w-3.5 h-3.5" /> },
+    { value: 'programming', label: t('code'), icon: <Code className="w-3.5 h-3.5" /> },
+    { value: 'punctuation', label: t('punctuation'), icon: <Percent className="w-3.5 h-3.5" /> },
+  ];
+
+  const durations: TestDuration[] = [15, 30, 60, 120];
+  const wordCounts: TestWordCount[] = [10, 25, 50, 100];
+
+  return (
+    <div className="flex flex-col items-center gap-4 py-6">
+      {/* Mode Selector */}
+      <div className="flex items-center gap-1 p-1 rounded-xl bg-secondary/50">
+        {modes.map((m) => (
+          <button
+            key={m.value}
+            onClick={() => !disabled && onModeChange(m.value)}
+            disabled={disabled}
+            className={cn(
+              'flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200',
+              mode === m.value
+                ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/25'
+                : 'text-muted-foreground hover:text-foreground hover:bg-secondary',
+              disabled && 'opacity-50 cursor-not-allowed'
+            )}
+          >
+            {m.icon}
+            <span>{m.label}</span>
+          </button>
+        ))}
+      </div>
+
+      {/* Word List & Duration/Count Row */}
+      <div className="flex flex-wrap items-center justify-center gap-6">
+        {/* Word List */}
+        <div className="flex items-center gap-1">
+          {wordLists.map((wl) => (
+            <button
+              key={wl.value}
+              onClick={() => !disabled && onWordListChange(wl.value)}
+              disabled={disabled}
+              className={cn(
+                'flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200',
+                wordList === wl.value
+                  ? 'bg-accent/20 text-accent border border-accent/30'
+                  : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50',
+                disabled && 'opacity-50 cursor-not-allowed'
+              )}
+            >
+              {wl.icon}
+              <span>{wl.label}</span>
+            </button>
+          ))}
+        </div>
+
+        <div className="w-px h-6 bg-border" />
+
+        {/* Duration or Word Count */}
+        {mode === 'time' ? (
+          <div className="flex items-center gap-1">
+            {durations.map((d) => (
+              <button
+                key={d}
+                onClick={() => !disabled && onDurationChange(d)}
+                disabled={disabled}
+                className={cn(
+                  'px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition-all duration-200',
+                  duration === d
+                    ? 'bg-primary/20 text-primary border border-primary/30'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50',
+                  disabled && 'opacity-50 cursor-not-allowed'
+                )}
+              >
+                {d}{t('seconds')}
+              </button>
+            ))}
+          </div>
+        ) : mode === 'words' ? (
+          <div className="flex items-center gap-1">
+            {wordCounts.map((wc) => (
+              <button
+                key={wc}
+                onClick={() => !disabled && onWordCountChange(wc)}
+                disabled={disabled}
+                className={cn(
+                  'px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition-all duration-200',
+                  wordCount === wc
+                    ? 'bg-primary/20 text-primary border border-primary/30'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50',
+                  disabled && 'opacity-50 cursor-not-allowed'
+                )}
+              >
+                {wc}
+              </button>
+            ))}
+          </div>
+        ) : null}
+      </div>
+    </div>
+  );
+}
