@@ -66,7 +66,7 @@ export function KeyboardHeatmap({ errors, text, userInput }: KeyboardHeatmapProp
   return (
     <div className="mt-8 p-4 rounded-xl bg-card/30 border border-border/30">
       <div className="text-xs text-muted-foreground uppercase tracking-wider mb-4 text-center">
-        {locale === 'pt' ? 'Precisao por tecla' : 'Key accuracy'}
+        Precisão por tecla
       </div>
       <div className="flex flex-col items-center gap-1">
         {KEYBOARD_ROWS.map((row, rowIndex) => (

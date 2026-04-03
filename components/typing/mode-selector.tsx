@@ -49,28 +49,7 @@ export function ModeSelector({
 
   return (
     <div className="flex flex-col items-center gap-4 py-6">
-      {/* Mode Selector */}
-      <div className="flex items-center gap-1 p-1 rounded-xl bg-secondary/50">
-        {modes.map((m) => (
-          <button
-            key={m.value}
-            onClick={() => !disabled && onModeChange(m.value)}
-            disabled={disabled}
-            className={cn(
-              'flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200',
-              mode === m.value
-                ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/25'
-                : 'text-muted-foreground hover:text-foreground hover:bg-secondary',
-              disabled && 'opacity-50 cursor-not-allowed'
-            )}
-          >
-            {m.icon}
-            <span>{m.label}</span>
-          </button>
-        ))}
-      </div>
-
-      {/* Word List & Duration/Count Row */}
+      {/* Word List & Duration Row */}
       <div className="flex flex-wrap items-center justify-center gap-6">
         {/* Word List */}
         <div className="flex items-center gap-1">
@@ -82,60 +61,42 @@ export function ModeSelector({
               className={cn(
                 'flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200',
                 wordList === wl.value
-                  ? 'bg-accent/20 text-accent border border-accent/30'
+                  ? 'bg-accent/20 text-accent border border-accent/30 shadow-sm'
                   : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50',
                 disabled && 'opacity-50 cursor-not-allowed'
               )}
             >
-              {wl.icon}
+              <span className="opacity-70 group-hover:opacity-100 transition-opacity">
+                {wl.icon}
+              </span>
               <span>{wl.label}</span>
             </button>
           ))}
         </div>
 
-        <div className="w-px h-6 bg-border" />
+        <div className="w-px h-6 bg-border/50" />
 
-        {/* Duration or Word Count */}
-        {mode === 'time' ? (
-          <div className="flex items-center gap-1">
-            {durations.map((d) => (
-              <button
-                key={d}
-                onClick={() => !disabled && onDurationChange(d)}
-                disabled={disabled}
-                className={cn(
-                  'px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition-all duration-200',
-                  duration === d
-                    ? 'bg-primary/20 text-primary border border-primary/30'
-                    : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50',
-                  disabled && 'opacity-50 cursor-not-allowed'
-                )}
-              >
-                {d}{t('seconds')}
-              </button>
-            ))}
-          </div>
-        ) : mode === 'words' ? (
-          <div className="flex items-center gap-1">
-            {wordCounts.map((wc) => (
-              <button
-                key={wc}
-                onClick={() => !disabled && onWordCountChange(wc)}
-                disabled={disabled}
-                className={cn(
-                  'px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition-all duration-200',
-                  wordCount === wc
-                    ? 'bg-primary/20 text-primary border border-primary/30'
-                    : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50',
-                  disabled && 'opacity-50 cursor-not-allowed'
-                )}
-              >
-                {wc}
-              </button>
-            ))}
-          </div>
-        ) : null}
+        {/* Duration (Always show durations since mode is locked to time) */}
+        <div className="flex items-center gap-1">
+          {durations.map((d) => (
+            <button
+              key={d}
+              onClick={() => !disabled && onDurationChange(d)}
+              disabled={disabled}
+              className={cn(
+                'px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition-all duration-200',
+                duration === d
+                  ? 'bg-primary/20 text-primary border border-primary/30 shadow-md'
+                  : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50',
+                disabled && 'opacity-50 cursor-not-allowed'
+              )}
+            >
+              {d}{t('seconds')}
+            </button>
+          ))}
+        </div>
       </div>
     </div>
   );
 }
+

@@ -19,20 +19,18 @@ export function Results({ stats, state, onRestart }: ResultsProps) {
   const { t, locale } = useLocaleContext();
 
   const getWpmRating = (wpm: number) => {
-    if (wpm >= 100) return { label: locale === 'pt' ? 'Lendario' : 'Legendary', color: 'text-chart-4', icon: Trophy };
-    if (wpm >= 80) return { label: locale === 'pt' ? 'Especialista' : 'Expert', color: 'text-primary', icon: Sparkles };
-    if (wpm >= 60) return { label: locale === 'pt' ? 'Avancado' : 'Advanced', color: 'text-chart-2', icon: Target };
-    if (wpm >= 40) return { label: locale === 'pt' ? 'Intermediario' : 'Intermediate', color: 'text-foreground', icon: Gauge };
-    return { label: locale === 'pt' ? 'Iniciante' : 'Beginner', color: 'text-muted-foreground', icon: Clock };
+    if (wpm >= 100) return { label: 'Lendário', color: 'text-chart-4', icon: Trophy };
+    if (wpm >= 80) return { label: 'Especialista', color: 'text-primary', icon: Sparkles };
+    if (wpm >= 60) return { label: 'Avançado', color: 'text-chart-2', icon: Target };
+    if (wpm >= 40) return { label: 'Intermediário', color: 'text-foreground', icon: Gauge };
+    return { label: 'Iniciante', color: 'text-muted-foreground', icon: Clock };
   };
 
   const rating = getWpmRating(stats.wpm);
   const RatingIcon = rating.icon;
 
   const handleShare = async () => {
-    const text = locale === 'pt' 
-      ? `Acabei de digitar ${stats.wpm} PPM com ${stats.accuracy}% de precisao no Velocitytype!`
-      : `I just typed ${stats.wpm} WPM with ${stats.accuracy}% accuracy on Velocitytype!`;
+    const text = `Acabei de digitar ${stats.wpm} PPM com ${stats.accuracy}% de precisão no Velocitytype!`;
     
     if (navigator.share) {
       try {
@@ -65,14 +63,14 @@ export function Results({ stats, state, onRestart }: ResultsProps) {
       value: stats.rawWpm,
       icon: Clock,
       color: 'text-muted-foreground',
-      description: locale === 'pt' ? 'incluindo erros' : 'including errors',
+      description: 'incluindo erros',
     },
     {
       label: t('consistency'),
       value: `${stats.consistency}%`,
       icon: Sparkles,
       color: stats.consistency >= 80 ? 'text-correct' : 'text-current',
-      description: locale === 'pt' ? 'estabilidade' : 'typing steadiness',
+      description: 'estabilidade',
     },
   ];
 
@@ -166,7 +164,7 @@ export function Results({ stats, state, onRestart }: ResultsProps) {
         </div>
         <div className="flex items-center gap-2">
           <X className="w-4 h-4 text-incorrect" />
-          <span className="text-muted-foreground">{locale === 'pt' ? 'Erros' : 'Errors'}:</span>
+          <span className="text-muted-foreground">Erros:</span>
           <span className="font-mono font-medium text-incorrect">{stats.incorrectChars}</span>
         </div>
         <div className="flex items-center gap-2">
@@ -244,9 +242,8 @@ export function Results({ stats, state, onRestart }: ResultsProps) {
         </Button>
       </motion.div>
 
-      {/* Keyboard shortcut hint */}
       <div className="text-center mt-4 text-sm text-muted-foreground">
-        {locale === 'pt' ? 'Pressione' : 'Press'} <kbd className="px-2 py-0.5 rounded bg-secondary font-mono text-xs">Tab</kbd> {locale === 'pt' ? 'para reiniciar' : 'to restart'}
+        Pressione <kbd className="px-2 py-0.5 rounded bg-secondary font-mono text-xs">Tab</kbd> para reiniciar
       </div>
     </motion.div>
   );

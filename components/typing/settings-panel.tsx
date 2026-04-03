@@ -80,7 +80,7 @@ export function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
                   <div>
                     <h2 className="text-lg font-bold text-foreground">{t('settingsTitle')}</h2>
                     <p className="text-sm text-muted-foreground">
-                      {locale === 'pt' ? 'Personalize sua experiencia' : 'Customize your experience'}
+                      Personalize sua experiência
                     </p>
                   </div>
                 </div>
@@ -91,42 +91,6 @@ export function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
 
               {/* Content */}
               <div className="flex-1 overflow-auto p-6 space-y-6">
-                {/* Language Section */}
-                <div className="pb-6 border-b border-border">
-                  <div className="flex items-center gap-3 mb-4">
-                    <Languages className="w-5 h-5 text-muted-foreground" />
-                    <div className="font-medium text-foreground">{t('language')}</div>
-                  </div>
-                  
-                  <div className="grid grid-cols-2 gap-2">
-                    <button 
-                      onClick={() => setLocale('pt')}
-                      className={`p-4 rounded-lg text-center transition-all ${
-                        locale === 'pt' 
-                          ? 'bg-background border-2 border-primary' 
-                          : 'bg-secondary/50 border border-border hover:border-primary/50'
-                      }`}
-                    >
-                      <span className="text-2xl mb-2 block">🇧🇷</span>
-                      <span className={`text-sm font-medium ${locale === 'pt' ? 'text-foreground' : 'text-muted-foreground'}`}>
-                        Portugues
-                      </span>
-                    </button>
-                    <button 
-                      onClick={() => setLocale('en')}
-                      className={`p-4 rounded-lg text-center transition-all ${
-                        locale === 'en' 
-                          ? 'bg-background border-2 border-primary' 
-                          : 'bg-secondary/50 border border-border hover:border-primary/50'
-                      }`}
-                    >
-                      <span className="text-2xl mb-2 block">🇺🇸</span>
-                      <span className={`text-sm font-medium ${locale === 'en' ? 'text-foreground' : 'text-muted-foreground'}`}>
-                        English
-                      </span>
-                    </button>
-                  </div>
-                </div>
 
                 {/* Sound */}
                 <div className="flex items-center justify-between">
@@ -167,9 +131,7 @@ export function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
                 {/* Live WPM */}
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="w-5 h-5 flex items-center justify-center text-muted-foreground font-mono text-xs font-bold">
-                      {locale === 'pt' ? 'PPM' : 'WPM'}
-                    </div>
+                      PPM
                     <div>
                       <div className="font-medium text-foreground">{t('showLiveWpm')}</div>
                       <div className="text-sm text-muted-foreground">{t('showLiveWpmDesc')}</div>
@@ -181,39 +143,13 @@ export function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
                   />
                 </div>
 
-                {/* Theme Section */}
-                <div className="pt-6 border-t border-border">
-                  <div className="flex items-center gap-3 mb-4">
-                    <Moon className="w-5 h-5 text-muted-foreground" />
-                    <div className="font-medium text-foreground">
-                      {locale === 'pt' ? 'Aparencia' : 'Appearance'}
-                    </div>
-                  </div>
-                  
-                  <div className="grid grid-cols-2 gap-2">
-                    <button className="p-4 rounded-lg bg-background border-2 border-primary text-center">
-                      <Moon className="w-5 h-5 mx-auto mb-2 text-foreground" />
-                      <span className="text-sm font-medium text-foreground">
-                        {locale === 'pt' ? 'Escuro' : 'Dark'}
-                      </span>
-                    </button>
-                    <button className="p-4 rounded-lg bg-secondary/50 border border-border text-center opacity-50 cursor-not-allowed">
-                      <Sun className="w-5 h-5 mx-auto mb-2 text-muted-foreground" />
-                      <span className="text-sm text-muted-foreground">
-                        {locale === 'pt' ? 'Claro' : 'Light'}
-                      </span>
-                    </button>
-                  </div>
-                  <p className="text-xs text-muted-foreground mt-2 text-center">
-                    {locale === 'pt' ? 'Modo claro em breve' : 'Light mode coming soon'}
-                  </p>
-                </div>
+
               </div>
 
               {/* Footer */}
               <div className="p-6 border-t border-border text-center">
                 <p className="text-xs text-muted-foreground">
-                  {locale === 'pt' ? 'Configuracoes salvas localmente' : 'Settings are saved locally'}
+                  Configurações salvas localmente
                 </p>
               </div>
             </div>

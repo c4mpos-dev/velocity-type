@@ -58,13 +58,12 @@ export default async function LeaderboardPage() {
             </p>
           </div>
 
-          <Tabs defaultValue="all" className="w-full">
+          <div className="w-full">
             <div className="flex items-center justify-between mb-6">
-              <TabsList className="bg-card border border-border/50">
-                <TabsTrigger value="all">Global</TabsTrigger>
-                <TabsTrigger value="time">Modo Tempo</TabsTrigger>
-                <TabsTrigger value="words">Modo Palavras</TabsTrigger>
-              </TabsList>
+              <div className="flex items-center gap-2">
+                <Trophy className="w-5 h-5 text-primary" />
+                <h2 className="text-xl font-bold">Ranking Global (Tempo)</h2>
+              </div>
               
               <div className="hidden sm:flex items-center gap-2 text-xs text-muted-foreground">
                 <Calendar className="w-3 h-3" />
@@ -72,8 +71,8 @@ export default async function LeaderboardPage() {
               </div>
             </div>
 
-            <TabsContent value="all" className="mt-0">
-              <Card className="border-border/40 bg-card/30 backdrop-blur-md overflow-hidden">
+            <Card className="border-border/40 bg-card/30 backdrop-blur-md overflow-hidden">
+
                 <Table>
                   <TableHeader>
                     <TableRow className="hover:bg-transparent border-border/40">
@@ -161,22 +160,10 @@ export default async function LeaderboardPage() {
                   </TableBody>
                 </Table>
               </Card>
-            </TabsContent>
-            
-            <TabsContent value="time" className="mt-0">
-               <div className="p-8 text-center border border-dashed rounded-xl border-border/50 text-muted-foreground">
-                  Filtro por modo de tempo em breve...
-               </div>
-            </TabsContent>
-
-            <TabsContent value="words" className="mt-0">
-               <div className="p-8 text-center border border-dashed rounded-xl border-border/50 text-muted-foreground">
-                  Filtro por modo de palavras em breve...
-               </div>
-            </TabsContent>
-          </Tabs>
+          </div>
         </main>
       </div>
+
 
       {/* Background decoration */}
       <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">

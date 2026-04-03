@@ -8,7 +8,6 @@ import { Header } from './header';
 import { ModeSelector } from './mode-selector';
 import { TypingArea } from './typing-area';
 import { Results } from './results';
-import { StatsModal } from './stats-modal';
 import { SettingsPanel } from './settings-panel';
 import { Footer } from './footer';
 import { motion } from 'framer-motion';
@@ -17,7 +16,6 @@ import { toast } from 'sonner';
 
 export function TypingTest() {
   const [user, setUser] = useState<any>(null);
-  const [showStats, setShowStats] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showLiveWpm, setShowLiveWpm] = useState(true);
   const [smoothCaret, setSmoothCaret] = useState(true);
@@ -42,7 +40,6 @@ export function TypingTest() {
     setSoundCallbacks,
   } = useTypingTest(locale);
 
-  // Load settings and user
   useEffect(() => {
     const init = async () => {
       const userData = await getUser();
@@ -58,12 +55,11 @@ export function TypingTest() {
     init();
   }, []);
 
-  // Save score when finished
   useEffect(() => {
     if (state.isFinished && stats && user && !isSaving && !hasSaved) {
       const handleSave = async () => {
         setIsSaving(true);
-        setHasSaved(true); // Bloqueia novos salvamentos imediatamente
+        setHasSaved(true);
         const result = await saveScore({
           wpm: stats.wpm,
           accuracy: stats.accuracy,
@@ -78,7 +74,7 @@ export function TypingTest() {
           toast.success('Pontuação salva no ranking!');
         } else {
           toast.error('Erro ao salvar pontuação: ' + result.error);
-          setHasSaved(false); // Permite tentar de novo se deu erro
+          setHasSaved(false);
         }
         setIsSaving(false);
       };
@@ -86,7 +82,6 @@ export function TypingTest() {
     }
   }, [state.isFinished, stats, user, state.mode, state.duration, state.wordCount, state.wordList, isSaving, hasSaved]);
 
-  // Reset states when test is reset
   useEffect(() => {
     if (!state.isStarted && !state.isFinished) {
       setIsSaving(false);
@@ -94,7 +89,6 @@ export function TypingTest() {
     }
   }, [state.isStarted, state.isFinished]);
 
-  // Listen for settings changes
   useEffect(() => {
     const handleStorage = () => {
       const liveWpm = localStorage.getItem('velocitytype-live-wpm') !== 'false';
@@ -112,7 +106,6 @@ export function TypingTest() {
     };
   }, []);
 
-  // Set up sound callbacks
   useEffect(() => {
     setSoundCallbacks({
       onKeypress: (isError) => {
@@ -131,7 +124,6 @@ export function TypingTest() {
     <div className="min-h-screen flex flex-col bg-background">
       <div className="flex-1 container max-w-4xl mx-auto px-4">
         <Header 
-          onShowStats={() => setShowStats(true)} 
           onShowSettings={() => setShowSettings(true)}
           user={user}
         />
@@ -178,17 +170,13 @@ export function TypingTest() {
         <Footer />
       </div>
 
-      <StatsModal
-        isOpen={showStats}
-        onClose={() => setShowStats(false)}
-      />
+
 
       <SettingsPanel
         isOpen={showSettings}
         onClose={() => setShowSettings(false)}
       />
 
-      {/* Background decoration */}
       <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
         <motion.div 
           className="absolute top-0 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl"

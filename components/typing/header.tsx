@@ -8,12 +8,11 @@ import Link from 'next/link';
 import { cn } from '@/lib/utils';
 
 interface HeaderProps {
-  onShowStats?: () => void;
   onShowSettings?: () => void;
   user: any;
 }
 
-export function Header({ onShowStats, onShowSettings, user }: HeaderProps) {
+export function Header({ onShowSettings, user }: HeaderProps) {
   const { locale, toggleLocale, t } = useLocaleContext();
 
   return (
@@ -31,15 +30,6 @@ export function Header({ onShowStats, onShowSettings, user }: HeaderProps) {
       </Link>
       
       <nav className="flex items-center gap-1 sm:gap-2">
-        <Button 
-          variant="ghost" 
-          size="sm" 
-          className="text-muted-foreground hover:text-foreground gap-1.5 font-medium hidden md:flex"
-          onClick={toggleLocale}
-        >
-          <Languages className="w-4 h-4" />
-          <span className="uppercase text-xs">{locale}</span>
-        </Button>
         
         <Button 
           variant="ghost" 
@@ -51,17 +41,6 @@ export function Header({ onShowStats, onShowSettings, user }: HeaderProps) {
             <Trophy className="w-4 h-4" />
             <span className="sr-only">Leaderboard</span>
           </Link>
-        </Button>
-
-        <Button 
-          variant="ghost" 
-          size="icon" 
-          className="text-muted-foreground hover:text-foreground"
-          onClick={onShowStats}
-          disabled={!onShowStats}
-        >
-          <BarChart3 className={cn("w-5 h-5", !onShowStats && "opacity-20")} />
-          <span className="sr-only">{t('stats')}</span>
         </Button>
         
         <Button 

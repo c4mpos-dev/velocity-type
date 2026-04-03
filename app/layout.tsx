@@ -14,9 +14,9 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Velocitytype — Test Your Typing Speed',
-  description: 'A modern, minimalist typing test. Track your WPM, accuracy, and improve your typing skills with multiple modes and detailed statistics.',
-  generator: 'v0.app',
+  title: 'Velocitytype',
+  description: 'Teste sua velocidade de digitação, melhore seu wpm e divirta-se.',
+  generator: 'Velocitytype',
   keywords: ['typing test', 'wpm', 'typing speed', 'keyboard', 'practice'],
   authors: [{ name: 'Velocitytype' }],
   icons: {

@@ -15,31 +15,19 @@ interface LocaleContextType {
 const LocaleContext = createContext<LocaleContextType | null>(null);
 
 export function LocaleProvider({ children }: { children: ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>('pt');
+  const [locale] = useState<Locale>('pt');
 
-  useEffect(() => {
-    const saved = localStorage.getItem(LOCALE_KEY) as Locale | null;
-    if (saved && (saved === 'pt' || saved === 'en')) {
-      setLocaleState(saved);
-    }
-  }, []);
-
-  const setLocale = useCallback((newLocale: Locale) => {
-    setLocaleState(newLocale);
-    localStorage.setItem(LOCALE_KEY, newLocale);
+  const setLocale = useCallback(() => {
+    // No-op - only Portuguese supported
   }, []);
 
   const toggleLocale = useCallback(() => {
-    setLocaleState(prev => {
-      const newLocale = prev === 'pt' ? 'en' : 'pt';
-      localStorage.setItem(LOCALE_KEY, newLocale);
-      return newLocale;
-    });
+    // No-op - only Portuguese supported
   }, []);
 
   const t = useCallback((key: TranslationKey): string => {
-    return translations[locale][key] || translations.en[key] || key;
-  }, [locale]);
+    return translations.pt[key] || key;
+  }, []);
 
   return (
     <LocaleContext.Provider value={{ locale, setLocale, toggleLocale, t }}>
@@ -47,6 +35,7 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
     </LocaleContext.Provider>
   );
 }
+
 
 export function useLocaleContext() {
   const context = useContext(LocaleContext);

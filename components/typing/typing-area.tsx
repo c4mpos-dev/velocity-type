@@ -246,7 +246,7 @@ export function TypingArea({
               {timeLeft}
             </motion.div>
             <div className="text-xs text-muted-foreground uppercase tracking-wider">
-              {locale === 'pt' ? 'segundos' : 'seconds'}
+              segundos
             </div>
           </motion.div>
         )}
@@ -359,23 +359,7 @@ export function TypingArea({
           <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-card/80 to-transparent pointer-events-none" />
         </div>
 
-        {/* Progress bar for words mode */}
-        {state.mode === 'words' && state.isStarted && (
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="absolute bottom-0 left-0 right-0 h-1 bg-border/30"
-          >
-            <motion.div 
-              className="h-full bg-primary/50"
-              initial={{ width: 0 }}
-              animate={{ 
-                width: `${Math.min(100, (state.userInput.split(' ').filter(w => w.length > 0).length / state.wordCount) * 100)}%` 
-              }}
-              transition={{ type: 'spring', stiffness: 100 }}
-            />
-          </motion.div>
-        )}
+
       </motion.div>
 
       {/* Reset Hint */}
@@ -390,8 +374,8 @@ export function TypingArea({
           className="flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-secondary/50 transition-all hover:scale-105 active:scale-95"
         >
           <RotateCcw className="w-4 h-4" />
-          <span>{locale === 'pt' ? 'reiniciar teste' : 'restart test'}</span>
-          <kbd className="px-2 py-0.5 rounded bg-secondary text-xs font-mono">tab</kbd>
+          <span>Reiniciar teste</span>
+          <kbd className="px-2 py-0.5 rounded bg-secondary text-xs font-mono">Tab</kbd>
         </button>
       </motion.div>
     </div>
