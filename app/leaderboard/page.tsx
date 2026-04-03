@@ -5,6 +5,7 @@ import { Trophy, Clock, Target, Gauge, User, Calendar } from 'lucide-react'
 import { formatDistanceToNow } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { cn } from '@/lib/utils'
+import Link from 'next/link'
 import {
   Table,
   TableBody,
@@ -18,12 +19,25 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
-export default async function LeaderboardPage() {
+export default async function LeaderboardPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ type?: string }>
+}) {
+  const params = await searchParams
+  const activeType = params.type || 'common'
   const supabase = await createClient()
   const user = await getUser()
 
-  // Fetch top scores grouped by user to show only their best score
-  // For simplicity, we'll just fetch all scores joined with profiles
+  // Map of types to labels
+  const typeLabels: Record<string, string> = {
+    common: 'Comum',
+    medium: 'Médio',
+    programming: 'Código',
+    punctuation: 'Pontuação'
+  }
+
+  // Fetch top scores filtered by word_list
   const { data: scores, error } = await supabase
     .from('leaderboard')
     .select(`
@@ -32,6 +46,7 @@ export default async function LeaderboardPage() {
         display_name
       )
     `)
+    .eq('word_list', activeType)
     .order('wpm', { ascending: false })
     .limit(50)
 
@@ -42,10 +57,7 @@ export default async function LeaderboardPage() {
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <div className="flex-1 container max-w-4xl mx-auto px-4">
-        {/* We can reuse the header but we need to mock the props or update it */}
-        <Header 
-          user={user} 
-        />
+        <Header user={user} />
         
         <main className="py-8">
           <div className="flex flex-col items-center mb-10 text-center">
@@ -54,16 +66,28 @@ export default async function LeaderboardPage() {
             </div>
             <h1 className="text-4xl font-bold tracking-tight mb-2">Leaderboard</h1>
             <p className="text-muted-foreground max-w-md">
-              Os digitadores mais rápidos da comunidade Velocity Type.
+              Os digitadores mais rápidos na categoria <span className="text-primary font-bold">{typeLabels[activeType]}</span>.
             </p>
           </div>
 
           <div className="w-full">
             <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center gap-2">
-                <Trophy className="w-5 h-5 text-primary" />
-                <h2 className="text-xl font-bold">Ranking Global (Tempo)</h2>
-              </div>
+              <Tabs defaultValue={activeType} className="w-full sm:w-auto">
+                <TabsList className="bg-card border border-border/50">
+                  <TabsTrigger value="common" asChild>
+                    <Link href="/leaderboard?type=common">Comum</Link>
+                  </TabsTrigger>
+                  <TabsTrigger value="medium" asChild>
+                    <Link href="/leaderboard?type=medium">Médio</Link>
+                  </TabsTrigger>
+                  <TabsTrigger value="programming" asChild>
+                    <Link href="/leaderboard?type=programming">Código</Link>
+                  </TabsTrigger>
+                  <TabsTrigger value="punctuation" asChild>
+                    <Link href="/leaderboard?type=punctuation">Pontuação</Link>
+                  </TabsTrigger>
+                </TabsList>
+              </Tabs>
               
               <div className="hidden sm:flex items-center gap-2 text-xs text-muted-foreground">
                 <Calendar className="w-3 h-3" />
@@ -72,7 +96,6 @@ export default async function LeaderboardPage() {
             </div>
 
             <Card className="border-border/40 bg-card/30 backdrop-blur-md overflow-hidden">
-
                 <Table>
                   <TableHeader>
                     <TableRow className="hover:bg-transparent border-border/40">
@@ -80,7 +103,7 @@ export default async function LeaderboardPage() {
                       <TableHead>Usuário</TableHead>
                       <TableHead className="text-right">PPM</TableHead>
                       <TableHead className="text-right hidden md:table-cell">Precisão</TableHead>
-                      <TableHead className="text-right hidden sm:table-cell">Modo</TableHead>
+                      <TableHead className="text-right hidden sm:table-cell">Duração</TableHead>
                       <TableHead className="text-right">Data</TableHead>
                     </TableRow>
                   </TableHeader>
@@ -102,7 +125,7 @@ export default async function LeaderboardPage() {
                             {isTop3 ? (
                               <div className={cn(
                                 "inline-flex items-center justify-center w-6 h-6 rounded-md",
-                                index === 0 ? "bg-chart-4/20 text-chart-4" : 
+                                index === 0 ? "bg-chart-4/20 text-chart-4 shadow-[0_0_15px_rgba(255,165,0,0.3)]" : 
                                 index === 1 ? "bg-muted-foreground/20 text-muted-foreground" : 
                                 "bg-chart-2/20 text-chart-2"
                               )}>
@@ -127,7 +150,7 @@ export default async function LeaderboardPage() {
                           <TableCell className="text-right">
                             <div className="flex flex-col items-end">
                               <span className="font-mono font-bold text-xl text-primary">{score.wpm}</span>
-                              <span className="text-[10px] text-muted-foreground uppercase leading-none">WPM</span>
+                              <span className="text-[10px] text-muted-foreground uppercase leading-none">PPM</span>
                             </div>
                           </TableCell>
                           <TableCell className="text-right hidden md:table-cell">
@@ -140,8 +163,8 @@ export default async function LeaderboardPage() {
                             </div>
                           </TableCell>
                           <TableCell className="text-right hidden sm:table-cell">
-                            <Badge variant="outline" className="font-normal text-[10px] capitalize border-border/50">
-                              {score.mode} {score.mode_value}
+                            <Badge variant="outline" className="font-normal text-[10px] border-border/50">
+                              {score.mode_value}s
                             </Badge>
                           </TableCell>
                           <TableCell className="text-right text-xs text-muted-foreground">
@@ -153,7 +176,7 @@ export default async function LeaderboardPage() {
                     {(!scores || scores.length === 0) && (
                       <TableRow>
                         <TableCell colSpan={6} className="h-32 text-center text-muted-foreground">
-                          Nenhuma pontuação registrada ainda. Seja o primeiro!
+                          Nenhuma pontuação nesta categoria ainda. Seja o primeiro!
                         </TableCell>
                       </TableRow>
                     )}
@@ -164,8 +187,6 @@ export default async function LeaderboardPage() {
         </main>
       </div>
 
-
-      {/* Background decoration */}
       <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
         <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px]" />
         <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-chart-4/5 rounded-full blur-[120px]" />
