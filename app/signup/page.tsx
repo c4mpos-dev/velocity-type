@@ -1,99 +1,138 @@
 'use client'
 
-import { useActionState } from 'react'
+import { useActionState, useState } from 'react'
 import Link from 'next/link'
 import { signup } from '@/lib/supabase/actions'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Keyboard, Loader2, AlertCircle } from 'lucide-react'
+import { Keyboard, Loader2, AlertCircle, Eye, EyeOff, UserPlus } from 'lucide-react'
 import { Alert, AlertDescription } from '@/components/ui/alert'
+import { motion, AnimatePresence } from 'framer-motion'
 
 export default function SignupPage() {
   const [state, formAction, isPending] = useActionState(signup, null)
+  const [showPassword, setShowPassword] = useState(false)
 
   return (
-    <div className="flex min-h-screen items-center justify-center p-4 bg-background">
-      <Card className="w-full max-w-md border-border/50 bg-card/50 backdrop-blur-sm shadow-xl">
-        <CardHeader className="space-y-1 flex flex-col items-center">
-          <div className="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-4 shadow-lg shadow-primary/10">
-            <Keyboard className="w-6 h-6" />
-          </div>
-          <CardTitle className="text-2xl font-bold">Criar conta</CardTitle>
-          <CardDescription>
-            Crie sua conta para salvar suas melhores pontuações
-          </CardDescription>
-        </CardHeader>
-        <form action={formAction}>
-          <CardContent className="space-y-4">
-            {state?.error && (
-              <Alert variant="destructive" className="bg-destructive/10 border-destructive/20 text-destructive">
-                <AlertCircle className="h-4 w-4" />
-                <AlertDescription>{state.error}</AlertDescription>
-              </Alert>
-            )}
-            <div className="space-y-2">
-              <Label htmlFor="displayName">Nome de Usuário</Label>
-              <Input
-                id="displayName"
-                name="displayName"
-                placeholder="ex: digitador_veloz"
-                required
-                className="bg-background/50 border-border/50 focus:border-primary/50"
+    <div className="flex min-h-screen items-center justify-center p-4 bg-background relative overflow-hidden">
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7, ease: "easeOut" }}
+        className="w-full max-w-[440px]"
+      >
+        <Card className="border-border/40 bg-card/40 backdrop-blur-2xl shadow-2xl overflow-hidden relative border-t-primary/20">
+          <div className="absolute top-0 left-0 w-full h-1 bg-linear-to-r from-primary/0 via-primary/40 to-primary/0" />
+
+          <CardHeader className="pt-2 text-center">
+            <motion.div 
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ delay: 0.2, duration: 0.5 }}
+              className="mx-auto w-16 h-16 rounded-2xl bg-primary/10 text-primary flex items-center justify-center mb-4 ring-1 ring-primary/20 shadow-xl shadow-primary/5"
+            >
+              <UserPlus className="w-8 h-8" />
+            </motion.div>
+            <CardTitle className="text-3xl font-bold tracking-tight bg-clip-text text-transparent bg-linear-to-b from-foreground to-foreground/60">
+              Criar Conta
+            </CardTitle>
+            <CardDescription className="text-base text-muted-foreground font-medium">
+              Junte-se à maior comunidade de digitadores
+            </CardDescription>
+          </CardHeader>
+
+          <form action={formAction}>
+            <CardContent className="space-y-6 px-8">
+              <AnimatePresence mode="wait">
+                {state?.error && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                  >
+                    <Alert variant="destructive" className="bg-destructive/10 border-destructive/20 text-destructive py-3">
+                      <AlertCircle className="h-4 w-4" />
+                      <AlertDescription className="text-xs font-semibold">{state.error}</AlertDescription>
+                    </Alert>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              <div className="space-y-2.5">
+                <Label htmlFor="displayName" className="text-xs font-bold uppercase tracking-wider text-muted-foreground ml-1">Nickname</Label>
+                <Input
+                  id="displayName"
+                  name="displayName"
+                  placeholder="ex: digitador_veloz"
+                  required
+                  className="bg-background/40 border-border/40 focus:border-primary/50 h-12 transition-all duration-300 focus:ring-4 focus:ring-primary/5 text-base"
+                  disabled={isPending}
+                />
+              </div>
+
+              <div className="space-y-2.5">
+                <Label htmlFor="email" className="text-xs font-bold uppercase tracking-wider text-muted-foreground ml-1">Email</Label>
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  placeholder="seu@exemplo.com"
+                  required
+                  className="bg-background/40 border-border/40 focus:border-primary/50 h-12 transition-all duration-300 focus:ring-4 focus:ring-primary/5 text-base"
+                  disabled={isPending}
+                />
+              </div>
+
+              <div className="space-y-2.5">
+                <Label htmlFor="password" className="text-xs font-bold uppercase tracking-wider text-muted-foreground ml-1">Senha</Label>
+                <div className="relative group">
+                  <Input
+                    id="password"
+                    name="password"
+                    type={showPassword ? "text" : "password"}
+                    required
+                    className="bg-background/40 border-border/40 focus:border-primary/50 h-12 pr-12 transition-all duration-300 focus:ring-4 focus:ring-primary/5 text-base"
+                    disabled={isPending}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground/30 hover:text-primary transition-colors p-1.5 rounded-md hover:bg-primary/5"
+                  >
+                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  </button>
+                </div>
+              </div>
+            </CardContent>
+
+            <CardFooter className="flex flex-col gap-6 px-8 pt-8 pb-2">
+              <Button 
+                type="submit" 
+                className="w-full h-12 text-base font-bold shadow-2xl shadow-primary/20 hover:scale-[1.01] active:scale-[0.99] transition-all group overflow-hidden relative" 
                 disabled={isPending}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                name="email"
-                type="email"
-                placeholder="exemplo@vtype.com"
-                required
-                className="bg-background/50 border-border/50 focus:border-primary/50"
-                disabled={isPending}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="password">Senha</Label>
-              <Input 
-                id="password" 
-                name="password" 
-                type="password" 
-                required 
-                className="bg-background/50 border-border/50 focus:border-primary/50"
-                disabled={isPending}
-              />
-            </div>
-          </CardContent>
-          <CardFooter className="flex flex-col gap-4">
-            <Button type="submit" className="w-full" disabled={isPending}>
-              {isPending ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Criando conta...
-                </>
-              ) : (
-                'Criar Conta'
-              )}
-            </Button>
-            <div className="text-center text-sm text-muted-foreground">
-              Já tem uma conta?{' '}
-              <Link href="/login" className="text-primary hover:underline font-medium">
-                Fazer Log in
-              </Link>
-            </div>
-          </CardFooter>
-        </form>
-      </Card>
-      
-      {/* Background decoration */}
-      <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
-        <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px] opacity-50" />
-        <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-chart-4/5 rounded-full blur-[120px] opacity-50" />
-      </div>
+              >
+                {isPending ? (
+                  <>
+                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                    Criando conta...
+                  </>
+                ) : (
+                  'Cadastre-se grátis'
+                )}
+              </Button>
+              <div className="text-center text-sm font-medium text-muted-foreground">
+                Já faz parte da elite?{' '}
+                <Link href="/login" className="text-primary hover:text-primary/80 transition-colors font-bold border-b border-primary/30 hover:border-primary">
+                  Faça login
+                </Link>
+              </div>
+            </CardFooter>
+          </form>
+        </Card>
+      </motion.div>
     </div>
   )
 }
+
