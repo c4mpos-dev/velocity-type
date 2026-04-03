@@ -44,6 +44,9 @@ export const viewport: Viewport = {
   initialScale: 1,
 }
 
+import { Toaster } from '@/components/ui/sonner'
+import { LocaleProvider } from '@/components/locale-provider'
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -52,8 +55,11 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" className="dark">
       <body className={`${spaceGrotesk.variable} ${jetbrainsMono.variable} font-sans antialiased`}>
-        {children}
-        <Analytics />
+        <LocaleProvider>
+          {children}
+          <Toaster position="bottom-right" richColors />
+          <Analytics />
+        </LocaleProvider>
       </body>
     </html>
   )

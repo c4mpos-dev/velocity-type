@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS public.profiles (
 -- Create leaderboard table for storing best scores
 CREATE TABLE IF NOT EXISTS public.leaderboard (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  user_id UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
   wpm INTEGER NOT NULL,
   accuracy NUMERIC(5,2) NOT NULL,
   raw_wpm INTEGER NOT NULL,

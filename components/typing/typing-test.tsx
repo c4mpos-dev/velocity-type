@@ -12,12 +12,17 @@ import { StatsModal } from './stats-modal';
 import { SettingsPanel } from './settings-panel';
 import { Footer } from './footer';
 import { motion } from 'framer-motion';
+import { getUser, saveScore } from '@/lib/supabase/actions';
+import { toast } from 'sonner';
 
 export function TypingTest() {
+  const [user, setUser] = useState<any>(null);
   const [showStats, setShowStats] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showLiveWpm, setShowLiveWpm] = useState(true);
   const [smoothCaret, setSmoothCaret] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
+  const [hasSaved, setHasSaved] = useState(false);
   
   const { locale } = useLocaleContext();
   const { playKeySound, playErrorSound, playFinishSound, playTickSound } = useSound();
@@ -37,15 +42,57 @@ export function TypingTest() {
     setSoundCallbacks,
   } = useTypingTest(locale);
 
-  // Load settings from localStorage
+  // Load settings and user
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const liveWpm = localStorage.getItem('velocitytype-live-wpm') !== 'false';
-      const caret = localStorage.getItem('velocitytype-smooth-caret') !== 'false';
-      setShowLiveWpm(liveWpm);
-      setSmoothCaret(caret);
-    }
+    const init = async () => {
+      const userData = await getUser();
+      setUser(userData);
+      
+      if (typeof window !== 'undefined') {
+        const liveWpm = localStorage.getItem('velocitytype-live-wpm') !== 'false';
+        const caret = localStorage.getItem('velocitytype-smooth-caret') !== 'false';
+        setShowLiveWpm(liveWpm);
+        setSmoothCaret(caret);
+      }
+    };
+    init();
   }, []);
+
+  // Save score when finished
+  useEffect(() => {
+    if (state.isFinished && stats && user && !isSaving && !hasSaved) {
+      const handleSave = async () => {
+        setIsSaving(true);
+        setHasSaved(true); // Bloqueia novos salvamentos imediatamente
+        const result = await saveScore({
+          wpm: stats.wpm,
+          accuracy: stats.accuracy,
+          rawWpm: stats.rawWpm,
+          consistency: stats.consistency,
+          mode: state.mode,
+          modeValue: state.mode === 'time' ? state.duration : state.wordCount,
+          wordList: state.wordList,
+        });
+        
+        if (result.success) {
+          toast.success('Pontuação salva no ranking!');
+        } else {
+          toast.error('Erro ao salvar pontuação: ' + result.error);
+          setHasSaved(false); // Permite tentar de novo se deu erro
+        }
+        setIsSaving(false);
+      };
+      handleSave();
+    }
+  }, [state.isFinished, stats, user, state.mode, state.duration, state.wordCount, state.wordList, isSaving, hasSaved]);
+
+  // Reset states when test is reset
+  useEffect(() => {
+    if (!state.isStarted && !state.isFinished) {
+      setIsSaving(false);
+      setHasSaved(false);
+    }
+  }, [state.isStarted, state.isFinished]);
 
   // Listen for settings changes
   useEffect(() => {
@@ -86,6 +133,7 @@ export function TypingTest() {
         <Header 
           onShowStats={() => setShowStats(true)} 
           onShowSettings={() => setShowSettings(true)}
+          user={user}
         />
         
         <main className="py-8">
