@@ -52,7 +52,6 @@ export async function logout() {
   const supabase = await createClient()
   await supabase.auth.signOut()
   revalidatePath('/', 'layout')
-  redirect('/')
 }
 
 export async function getUser() {
@@ -85,22 +84,45 @@ export async function saveScore(stats: {
     return { error: 'User must be logged in to save scores' }
   }
 
-  const { error } = await supabase.from('leaderboard').insert({
-    user_id: user.id,
-    wpm: stats.wpm,
-    accuracy: stats.accuracy,
-    raw_wpm: stats.rawWpm,
-    consistency: stats.consistency,
-    mode: stats.mode,
-    mode_value: stats.modeValue,
-    word_list: stats.wordList,
-  })
+  const { data: existingBest } = await supabase
+    .from('leaderboard')
+    .select('wpm')
+    .eq('user_id', user.id)
+    .eq('word_list', stats.wordList)
+    .maybeSingle()
 
-  if (error) {
-    console.error('Error saving score:', error)
-    return { error: error.message }
+  const { error: profileError } = await supabase.from('profiles').upsert({
+    id: user.id,
+    display_name: user.user_metadata.display_name || user.email?.split('@')[0],
+    updated_at: new Date().toISOString(),
+  }, { onConflict: 'id' })
+
+  if (profileError) {
+    console.error('Error ensuring profile exists:', profileError)
   }
 
-  revalidatePath('/leaderboard')
-  return { success: true }
+  if (!existingBest || stats.wpm > existingBest.wpm) {
+    const { error } = await supabase.from('leaderboard').upsert({
+      user_id: user.id,
+      word_list: stats.wordList,
+      wpm: stats.wpm,
+      accuracy: stats.accuracy,
+      raw_wpm: stats.rawWpm,
+      consistency: stats.consistency,
+      mode: stats.mode,
+      mode_value: stats.modeValue,
+    }, { 
+      onConflict: 'user_id,word_list' 
+    })
+
+    if (error) {
+      console.error('Error saving score:', error)
+      return { error: error.message }
+    }
+    
+    revalidatePath('/leaderboard')
+    return { success: true, isNewRecord: true }
+  }
+
+  return { success: true, isNewRecord: false }
 }

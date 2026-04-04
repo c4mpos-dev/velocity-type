@@ -18,7 +18,6 @@ export function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
   const [smoothCaret, setSmoothCaret] = useState(true);
   const [showLiveWpm, setShowLiveWpm] = useState(true);
 
-  // Load settings from localStorage
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const sound = localStorage.getItem('velocitytype-sound') === 'true';
@@ -31,13 +30,10 @@ export function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
     }
   }, [isOpen]);
 
-  // Save settings
   const updateSetting = (key: string, value: boolean, setter: (v: boolean) => void) => {
     setter(value);
     localStorage.setItem(`velocitytype-${key}`, String(value));
   };
-
-  // Close on Escape
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
@@ -53,7 +49,6 @@ export function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
     <AnimatePresence>
       {isOpen && (
         <>
-          {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -62,7 +57,6 @@ export function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
             className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50"
           />
 
-          {/* Panel */}
           <motion.div
             initial={{ opacity: 0, x: '100%' }}
             animate={{ opacity: 1, x: 0 }}
@@ -71,7 +65,6 @@ export function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
             className="fixed right-0 top-0 bottom-0 w-full max-w-sm z-50"
           >
             <div className="h-full bg-card border-l border-border shadow-2xl flex flex-col">
-              {/* Header */}
               <div className="flex items-center justify-between p-6 border-b border-border">
                 <div className="flex items-center gap-3">
                   <div className="p-2 rounded-lg bg-primary/10">
@@ -89,10 +82,8 @@ export function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
                 </Button>
               </div>
 
-              {/* Content */}
               <div className="flex-1 overflow-auto p-6 space-y-6">
 
-                {/* Sound */}
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     {soundEnabled ? (
@@ -111,7 +102,6 @@ export function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
                   />
                 </div>
 
-                {/* Smooth Caret */}
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="w-5 h-5 flex items-center justify-center">
@@ -128,7 +118,6 @@ export function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
                   />
                 </div>
 
-                {/* Live WPM */}
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                       PPM
@@ -146,7 +135,6 @@ export function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
 
               </div>
 
-              {/* Footer */}
               <div className="p-6 border-t border-border text-center">
                 <p className="text-xs text-muted-foreground">
                   Configurações salvas localmente

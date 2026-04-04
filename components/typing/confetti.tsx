@@ -41,7 +41,6 @@ export function Confetti({ isActive, particleCount = 50 }: ConfettiProps) {
       }));
       setPieces(newPieces);
 
-      // Clear after animation
       const timeout = setTimeout(() => setPieces([]), 4000);
       return () => clearTimeout(timeout);
     }

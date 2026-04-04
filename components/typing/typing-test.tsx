@@ -14,8 +14,12 @@ import { motion } from 'framer-motion';
 import { getUser, saveScore } from '@/lib/supabase/actions';
 import { toast } from 'sonner';
 
-export function TypingTest() {
-  const [user, setUser] = useState<any>(null);
+interface TypingTestProps {
+  initialUser?: any;
+}
+
+export function TypingTest({ initialUser }: TypingTestProps) {
+  const [user, setUser] = useState<any>(initialUser);
   const [showSettings, setShowSettings] = useState(false);
   const [showLiveWpm, setShowLiveWpm] = useState(true);
   const [smoothCaret, setSmoothCaret] = useState(true);

@@ -1,6 +1,6 @@
 'use client';
 
-import { Clock, Type, Quote, Hash, Code, AtSign, Percent } from 'lucide-react';
+import { Hash, Code, AtSign, Percent } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { TestMode, TestDuration, TestWordCount } from '@/lib/typing-store';
 import { WordListType } from '@/lib/word-lists';
@@ -31,12 +31,6 @@ export function ModeSelector({
 }: ModeSelectorProps) {
   const { t } = useLocaleContext();
 
-  const modes: { value: TestMode; label: string; icon: React.ReactNode }[] = [
-    { value: 'time', label: t('time'), icon: <Clock className="w-4 h-4" /> },
-    { value: 'words', label: t('words'), icon: <Type className="w-4 h-4" /> },
-    { value: 'quote', label: t('quote'), icon: <Quote className="w-4 h-4" /> },
-  ];
-
   const wordLists: { value: WordListType; label: string; icon: React.ReactNode }[] = [
     { value: 'common', label: t('common'), icon: <AtSign className="w-3.5 h-3.5" /> },
     { value: 'medium', label: t('medium'), icon: <Hash className="w-3.5 h-3.5" /> },
@@ -45,13 +39,10 @@ export function ModeSelector({
   ];
 
   const durations: TestDuration[] = [15, 30, 60, 120];
-  const wordCounts: TestWordCount[] = [10, 25, 50, 100];
 
   return (
     <div className="flex flex-col items-center gap-4 py-6">
-      {/* Word List & Duration Row */}
       <div className="flex flex-wrap items-center justify-center gap-6">
-        {/* Word List */}
         <div className="flex items-center gap-1">
           {wordLists.map((wl) => (
             <button
@@ -76,7 +67,6 @@ export function ModeSelector({
 
         <div className="w-px h-6 bg-border/50" />
 
-        {/* Duration (Always show durations since mode is locked to time) */}
         <div className="flex items-center gap-1">
           {durations.map((d) => (
             <button

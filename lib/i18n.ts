@@ -2,11 +2,9 @@ export type Locale = 'pt';
 
 export const translations = {
   pt: {
-    // Header
     stats: 'Estatísticas',
     settings: 'Configurações',
     
-    // Mode Selector
     time: 'tempo',
     words: 'palavras',
     quote: 'citação',
@@ -16,13 +14,11 @@ export const translations = {
     punctuation: 'pontuação',
     seconds: 's',
     
-    // Typing Area
     clickToStart: 'clique aqui ou pressione qualquer tecla para começar',
     focusWarning: 'clique para focar',
     tabToRestart: 'tab + enter para reiniciar',
     wordsProgress: 'palavras',
     
-    // Results
     wpm: 'ppm',
     wpmFull: 'palavras por minuto',
     raw: 'bruto',
@@ -44,7 +40,6 @@ export const translations = {
     greatJob: 'Ótimo trabalho!',
     keepPracticing: 'Continue praticando!',
     
-    // Stats Modal
     yourStats: 'Suas Estatísticas',
     allTime: 'Todos os tempos',
     testsCompleted: 'Testes completados',
@@ -56,7 +51,6 @@ export const translations = {
     startTyping: 'Comece a digitar para ver suas estatísticas!',
     close: 'Fechar',
     
-    // Settings Panel
     settingsTitle: 'Configurações',
     sound: 'Som',
     soundEnabled: 'Som ativado',
@@ -82,13 +76,11 @@ export const translations = {
     quickRestartDesc: 'Tab para reiniciar teste',
     language: 'Idioma',
     
-    // Footer
     madeWith: 'Feito com',
     forTypists: 'para digitadores',
     github: 'GitHub',
     twitter: 'Twitter',
     
-    // Keyboard
     errorRate: 'Taxa de erro',
   }
 } as const;

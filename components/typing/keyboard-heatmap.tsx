@@ -19,16 +19,13 @@ const KEYBOARD_ROWS = [
 export function KeyboardHeatmap({ errors, text, userInput }: KeyboardHeatmapProps) {
   const { locale } = useLocaleContext();
   
-  // Calculate error frequency per key
   const keyStats = useMemo(() => {
     const stats: Record<string, { errors: number; correct: number }> = {};
     
-    // Initialize all keys
     KEYBOARD_ROWS.flat().forEach(key => {
       stats[key] = { errors: 0, correct: 0 };
     });
     
-    // Count errors and correct characters
     for (let i = 0; i < userInput.length; i++) {
       const typedChar = userInput[i]?.toLowerCase();
       const expectedChar = text[i]?.toLowerCase();

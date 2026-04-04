@@ -18,23 +18,19 @@ export function useTypingTest(locale: Locale = 'pt') {
   const [timeLeft, setTimeLeft] = useState<number>(30);
   const [stats, setStats] = useState<TypingStats | null>(null);
   
-  // Use refs for precise timing with requestAnimationFrame
   const startTimeRef = useRef<number | null>(null);
   const animationFrameRef = useRef<number | null>(null);
   const wpmIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const lastTickRef = useRef<number>(0);
   
-  // Callbacks for sound effects (to be set by parent)
   const onKeypressRef = useRef<((isError: boolean) => void) | null>(null);
   const onFinishRef = useRef<(() => void) | null>(null);
   const onTickRef = useRef<(() => void) | null>(null);
 
-  // Generate new text
   const generateNewText = useCallback((wordList: WordListType, count: number = 200) => {
     return generateText(wordList, count, locale);
   }, [locale]);
 
-  // Cleanup function
   const cleanup = useCallback(() => {
     if (animationFrameRef.current) {
       cancelAnimationFrame(animationFrameRef.current);
@@ -48,7 +44,6 @@ export function useTypingTest(locale: Locale = 'pt') {
     lastTickRef.current = 0;
   }, []);
 
-  // Reset test
   const resetTest = useCallback(() => {
     cleanup();
     
@@ -58,13 +53,12 @@ export function useTypingTest(locale: Locale = 'pt') {
       wordList: prev.wordList,
       duration: prev.duration,
       wordCount: prev.wordCount,
-      text: generateNewText(prev.wordList, prev.mode === 'words' ? prev.wordCount * 2 : 200),
+      text: generateNewText(prev.wordList, 200),
     }));
     setTimeLeft(state.duration);
     setStats(null);
   }, [cleanup, generateNewText, state.duration]);
 
-  // Set mode
   const setMode = useCallback((mode: TestMode) => {
     cleanup();
     setState(prev => ({
@@ -73,12 +67,11 @@ export function useTypingTest(locale: Locale = 'pt') {
       wordList: prev.wordList,
       duration: prev.duration,
       wordCount: prev.wordCount,
-      text: generateNewText(prev.wordList, mode === 'words' ? prev.wordCount * 2 : 200),
+      text: generateNewText(prev.wordList, 200),
     }));
     setStats(null);
   }, [cleanup, generateNewText]);
 
-  // Set word list
   const setWordList = useCallback((wordList: WordListType) => {
     cleanup();
     setState(prev => ({
@@ -87,12 +80,11 @@ export function useTypingTest(locale: Locale = 'pt') {
       wordList,
       duration: prev.duration,
       wordCount: prev.wordCount,
-      text: generateNewText(wordList, prev.mode === 'words' ? prev.wordCount * 2 : 200),
+      text: generateNewText(wordList, 200),
     }));
     setStats(null);
   }, [cleanup, generateNewText]);
 
-  // Set duration
   const setDuration = useCallback((duration: TestDuration) => {
     setState(prev => ({
       ...prev,
@@ -101,7 +93,6 @@ export function useTypingTest(locale: Locale = 'pt') {
     setTimeLeft(duration);
   }, []);
 
-  // Set word count
   const setWordCount = useCallback((wordCount: TestWordCount) => {
     cleanup();
     setState(prev => ({
@@ -110,42 +101,36 @@ export function useTypingTest(locale: Locale = 'pt') {
       wordList: prev.wordList,
       duration: prev.duration,
       wordCount,
-      text: generateNewText(prev.wordList, wordCount * 2),
+      text: generateNewText(prev.wordList, 200),
     }));
     setStats(null);
   }, [cleanup, generateNewText]);
 
-  // Finish test
   const finishTest = useCallback(() => {
     cleanup();
     
     setState(prev => {
-      if (prev.isFinished) return prev; // Prevent double finish
+      if (prev.isFinished) return prev;
       
       const endTime = Date.now();
       const newState = { ...prev, isFinished: true, endTime };
       const finalStats = calculateStats(newState);
       
-      // Save result
       saveResult({
         ...finalStats,
         date: new Date(),
         mode: prev.mode,
         wordList: prev.wordList,
-        duration: prev.mode === 'time' ? prev.duration : undefined,
-        wordCount: prev.mode === 'words' ? prev.wordCount : undefined,
+        duration: prev.duration,
       });
       
       setStats(finalStats);
-      
-      // Play finish sound
       onFinishRef.current?.();
       
       return newState;
     });
   }, [cleanup]);
 
-  // Precise timer using requestAnimationFrame
   const startTimer = useCallback((duration: number) => {
     startTimeRef.current = performance.now();
     lastTickRef.current = duration;
@@ -157,10 +142,8 @@ export function useTypingTest(locale: Locale = 'pt') {
       const remaining = Math.max(0, duration - elapsed);
       const remainingSeconds = Math.ceil(remaining);
       
-      // Update time left
       setTimeLeft(remainingSeconds);
       
-      // Play tick sound on second change
       if (remainingSeconds !== lastTickRef.current && remainingSeconds > 0 && remainingSeconds <= 5) {
         onTickRef.current?.();
         lastTickRef.current = remainingSeconds;
@@ -177,22 +160,18 @@ export function useTypingTest(locale: Locale = 'pt') {
     animationFrameRef.current = requestAnimationFrame(tick);
   }, [finishTest]);
 
-  // Handle input
   const handleInput = useCallback((char: string) => {
     setState(prev => {
       if (prev.isFinished) return prev;
 
-      // Start timer on first input
       if (!prev.isStarted) {
         const startTime = Date.now();
         
-        // Start countdown for time mode
         if (prev.mode === 'time') {
           setTimeLeft(prev.duration);
           startTimer(prev.duration);
         }
         
-        // Track WPM every second
         wpmIntervalRef.current = setInterval(() => {
           setState(current => {
             if (current.isFinished || !current.isStarted) return current;
@@ -206,8 +185,6 @@ export function useTypingTest(locale: Locale = 'pt') {
         }, 1000);
         
         const isError = char !== prev.text[0];
-        
-        // Play sound
         onKeypressRef.current?.(isError);
         
         return {
@@ -229,22 +206,10 @@ export function useTypingTest(locale: Locale = 'pt') {
         newErrors.add(newIndex);
       }
       
-      // Play sound
       onKeypressRef.current?.(isError);
 
       const newUserInput = prev.userInput + char;
       
-      // Check if finished (words mode)
-      if (prev.mode === 'words') {
-        const wordsTyped = newUserInput.split(' ').filter(w => w.length > 0).length;
-        const lastChar = prev.text[newIndex];
-        
-        if (wordsTyped >= prev.wordCount && lastChar === ' ') {
-          setTimeout(() => finishTest(), 0);
-        }
-      }
-      
-      // Check if reached end of text
       if (newIndex >= prev.text.length - 1) {
         setTimeout(() => finishTest(), 0);
       }
@@ -258,7 +223,6 @@ export function useTypingTest(locale: Locale = 'pt') {
     });
   }, [finishTest, startTimer]);
 
-  // Handle backspace
   const handleBackspace = useCallback(() => {
     setState(prev => {
       if (prev.isFinished || prev.currentIndex === 0) return prev;
@@ -276,7 +240,6 @@ export function useTypingTest(locale: Locale = 'pt') {
     });
   }, []);
 
-  // Set sound callbacks
   const setSoundCallbacks = useCallback((callbacks: {
     onKeypress?: (isError: boolean) => void;
     onFinish?: () => void;
@@ -287,22 +250,19 @@ export function useTypingTest(locale: Locale = 'pt') {
     onTickRef.current = callbacks.onTick || null;
   }, []);
 
-  // Cleanup on unmount
   useEffect(() => {
     return cleanup;
   }, [cleanup]);
 
-  // Regenerate text when locale changes
   useEffect(() => {
     if (!state.isStarted) {
       setState(prev => ({
         ...prev,
-        text: generateNewText(prev.wordList, prev.mode === 'words' ? prev.wordCount * 2 : 200),
+        text: generateNewText(prev.wordList, 200),
       }));
     }
   }, [locale, generateNewText, state.isStarted]);
 
-  // Calculate live stats
   const liveStats = state.isStarted ? calculateStats(state) : null;
 
   return {

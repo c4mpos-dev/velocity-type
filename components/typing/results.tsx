@@ -36,7 +36,6 @@ export function Results({ stats, state, onRestart }: ResultsProps) {
       try {
         await navigator.share({ text });
       } catch {
-        // User cancelled or error
       }
     } else {
       navigator.clipboard.writeText(text);
@@ -83,10 +82,8 @@ export function Results({ stats, state, onRestart }: ResultsProps) {
       transition={{ duration: 0.5 }}
       className="py-8"
     >
-      {/* Confetti for good results */}
       <Confetti isActive={showConfetti} particleCount={showConfetti ? 60 : 0} />
 
-      {/* Main WPM Display */}
       <div className="text-center mb-8">
         <motion.div 
           initial={{ scale: 0.5 }}
@@ -124,7 +121,6 @@ export function Results({ stats, state, onRestart }: ResultsProps) {
         </motion.div>
       </div>
 
-      {/* Stats Grid */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
         {statItems.map((item, index) => (
           <motion.div
@@ -150,7 +146,6 @@ export function Results({ stats, state, onRestart }: ResultsProps) {
         ))}
       </div>
 
-      {/* Character Stats */}
       <motion.div 
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -174,7 +169,6 @@ export function Results({ stats, state, onRestart }: ResultsProps) {
         </div>
       </motion.div>
 
-      {/* WPM Progress Chart */}
       {state.wpmHistory.length > 1 && (
         <motion.div 
           initial={{ opacity: 0 }}
@@ -203,7 +197,6 @@ export function Results({ stats, state, onRestart }: ResultsProps) {
         </motion.div>
       )}
 
-      {/* Keyboard Heatmap */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -216,7 +209,6 @@ export function Results({ stats, state, onRestart }: ResultsProps) {
         />
       </motion.div>
 
-      {/* Actions */}
       <motion.div 
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}

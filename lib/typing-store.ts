@@ -1,6 +1,6 @@
 import { WordListType, generateText } from './word-lists';
 
-export type TestMode = 'time' | 'words' | 'quote';
+export type TestMode = 'time';
 export type TestDuration = 15 | 30 | 60 | 120;
 export type TestWordCount = 10 | 25 | 50 | 100;
 
@@ -70,7 +70,6 @@ export function calculateStats(state: TypingState): TypingStats {
   const incorrectChars = errors.size;
   const totalChars = userInput.length;
   
-  // WPM calculation (5 chars = 1 word)
   const wpm = timeElapsed > 0 ? Math.round((correctChars / 5) / timeElapsed) : 0;
   const rawWpm = timeElapsed > 0 ? Math.round((totalChars / 5) / timeElapsed) : 0;
   
@@ -78,7 +77,6 @@ export function calculateStats(state: TypingState): TypingStats {
     ? Math.round((correctChars / totalChars) * 100) 
     : 100;
   
-  // Calculate consistency (lower std deviation = higher consistency)
   const wpmHistory = state.wpmHistory;
   let consistency = 100;
   if (wpmHistory.length > 1) {
@@ -109,7 +107,6 @@ export function saveResult(result: TestResult): void {
   const history = getHistory();
   history.unshift(result);
   
-  // Keep only last 100 results
   const trimmed = history.slice(0, 100);
   localStorage.setItem(HISTORY_KEY, JSON.stringify(trimmed));
 }

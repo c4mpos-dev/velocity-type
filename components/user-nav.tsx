@@ -60,7 +60,8 @@ export function UserNav({ user }: UserNavProps) {
         <DropdownMenuSeparator />
         <DropdownMenuItem 
           onClick={async () => {
-            await logout()
+            await logout();
+            window.location.href = '/';
           }}
           className="text-red-500 focus:text-red-500 cursor-pointer"
         >

@@ -29,7 +29,6 @@ export default async function LeaderboardPage({
   const supabase = await createClient()
   const user = await getUser()
 
-  // Map of types to labels
   const typeLabels: Record<string, string> = {
     common: 'Comum',
     medium: 'Médio',
@@ -37,7 +36,6 @@ export default async function LeaderboardPage({
     punctuation: 'Pontuação'
   }
 
-  // Fetch top scores filtered by word_list
   const { data: scores, error } = await supabase
     .from('leaderboard')
     .select(`

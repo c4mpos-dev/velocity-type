@@ -8,7 +8,6 @@ export function useSound() {
   const audioContextRef = useRef<AudioContext | null>(null);
   const [isEnabled, setIsEnabled] = useState(false);
 
-  // Load setting from localStorage
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const enabled = localStorage.getItem('velocitytype-sound') === 'true';
@@ -16,7 +15,6 @@ export function useSound() {
     }
   }, []);
 
-  // Listen for setting changes
   useEffect(() => {
     const handleStorage = () => {
       const enabled = localStorage.getItem('velocitytype-sound') === 'true';
@@ -25,7 +23,6 @@ export function useSound() {
     
     window.addEventListener('storage', handleStorage);
     
-    // Also check periodically for same-tab changes
     const interval = setInterval(handleStorage, 500);
     
     return () => {
@@ -38,7 +35,6 @@ export function useSound() {
     if (!audioContextRef.current) {
       audioContextRef.current = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
     }
-    // Resume if suspended (browser autoplay policy)
     if (audioContextRef.current.state === 'suspended') {
       audioContextRef.current.resume();
     }
@@ -53,12 +49,10 @@ export function useSound() {
       
       switch (type) {
         case 'key': {
-          // Realistic mechanical keyboard sound
           const oscillator = ctx.createOscillator();
           const gainNode = ctx.createGain();
           const filter = ctx.createBiquadFilter();
           
-          // Create noise for click
           const noiseBuffer = ctx.createBuffer(1, ctx.sampleRate * 0.02, ctx.sampleRate);
           const noiseData = noiseBuffer.getChannelData(0);
           for (let i = 0; i < noiseData.length; i++) {
@@ -72,14 +66,12 @@ export function useSound() {
           noiseSource.connect(noiseGain);
           noiseGain.connect(ctx.destination);
           
-          // Quick burst of filtered noise
           noiseGain.gain.setValueAtTime(0.15, ctx.currentTime);
           noiseGain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.02);
           
           noiseSource.start(ctx.currentTime);
           noiseSource.stop(ctx.currentTime + 0.02);
           
-          // Add a subtle click tone
           oscillator.connect(filter);
           filter.connect(gainNode);
           gainNode.connect(ctx.destination);
@@ -87,7 +79,6 @@ export function useSound() {
           filter.type = 'highpass';
           filter.frequency.setValueAtTime(2000, ctx.currentTime);
           
-          // Randomize pitch slightly for variety
           const baseFreq = 1200 + Math.random() * 400;
           oscillator.frequency.setValueAtTime(baseFreq, ctx.currentTime);
           oscillator.type = 'square';
@@ -101,7 +92,6 @@ export function useSound() {
         }
         
         case 'error': {
-          // Low thud for errors
           const oscillator = ctx.createOscillator();
           const gainNode = ctx.createGain();
           
@@ -121,7 +111,6 @@ export function useSound() {
         }
         
         case 'tick': {
-          // Subtle tick for timer
           const oscillator = ctx.createOscillator();
           const gainNode = ctx.createGain();
           
@@ -140,8 +129,7 @@ export function useSound() {
         }
         
         case 'finish': {
-          // Triumphant chord
-          const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+          const notes = [523.25, 659.25, 783.99, 1046.50];
           
           notes.forEach((freq, i) => {
             const oscillator = ctx.createOscillator();
@@ -164,7 +152,6 @@ export function useSound() {
         }
       }
     } catch {
-      // Sound not supported
     }
   }, [getAudioContext, isEnabled]);
 

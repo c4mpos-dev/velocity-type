@@ -44,17 +44,13 @@ export function TypingArea({
   const [lastError, setLastError] = useState<number | null>(null);
   const rippleIdRef = useRef(0);
 
-  // Focus handler
   const handleFocus = useCallback(() => {
     containerRef.current?.focus();
   }, []);
-
-  // Auto-focus on mount and after reset
   useEffect(() => {
     handleFocus();
   }, [handleFocus, state.text]);
 
-  // Add ripple effect
   const addRipple = useCallback((isError: boolean) => {
     if (!caretRef.current) return;
     
@@ -72,24 +68,18 @@ export function TypingArea({
     
     setRipples(prev => [...prev, ripple]);
     
-    // Remove ripple after animation
     setTimeout(() => {
       setRipples(prev => prev.filter(r => r.id !== ripple.id));
     }, 600);
   }, []);
-
-  // Shake on error
   const triggerShake = useCallback(() => {
     setShake(true);
     setTimeout(() => setShake(false), 200);
   }, []);
 
-  // Keyboard handler
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (state.isFinished) return;
-      
-      // Ignore modifier keys
       if (e.ctrlKey || e.metaKey || e.altKey) {
         if (e.key === 'Tab') {
           e.preventDefault();
@@ -110,11 +100,9 @@ export function TypingArea({
         return;
       }
 
-      // Only handle printable characters
       if (e.key.length === 1) {
         e.preventDefault();
         
-        // Check if this will be an error
         const expectedChar = state.text[state.currentIndex];
         const isError = e.key !== expectedChar;
         
@@ -132,13 +120,11 @@ export function TypingArea({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [state.isFinished, state.text, state.currentIndex, onInput, onBackspace, onReset, addRipple, triggerShake]);
 
-  // Scroll caret into view
   useEffect(() => {
     if (caretRef.current && textContainerRef.current) {
       const caretRect = caretRef.current.getBoundingClientRect();
       const containerRect = textContainerRef.current.getBoundingClientRect();
       
-      // Check if caret is outside visible area
       if (caretRect.top < containerRect.top || caretRect.bottom > containerRect.bottom) {
         caretRef.current.scrollIntoView({ 
           behavior: smoothCaret ? 'smooth' : 'auto', 
@@ -149,7 +135,6 @@ export function TypingArea({
     }
   }, [state.currentIndex, smoothCaret]);
 
-  // Split text into characters for rendering
   const renderText = () => {
     const chars = state.text.split('');
     
@@ -218,13 +203,11 @@ export function TypingArea({
     });
   };
 
-  // Timer warning state
   const isTimerWarning = state.mode === 'time' && timeLeft <= 10 && timeLeft > 0;
   const isTimerCritical = state.mode === 'time' && timeLeft <= 5 && timeLeft > 0;
 
   return (
     <div className="relative">
-      {/* Live Stats Bar */}
       <div className="flex items-center justify-center gap-8 mb-6">
         {state.mode === 'time' && (
           <motion.div 
@@ -293,7 +276,6 @@ export function TypingArea({
         )}
       </div>
 
-      {/* Typing Area */}
       <motion.div 
         ref={containerRef}
         tabIndex={0}
@@ -308,7 +290,6 @@ export function TypingArea({
           isTimerCritical && "border-destructive/50 ring-2 ring-destructive/20"
         )}
       >
-        {/* Ripple effects */}
         <AnimatePresence>
           {ripples.map(ripple => (
             <motion.div
@@ -326,7 +307,6 @@ export function TypingArea({
           ))}
         </AnimatePresence>
 
-        {/* Click to focus overlay */}
         <AnimatePresence>
           {!state.isStarted && !state.isFinished && (
             <motion.div 
@@ -346,7 +326,6 @@ export function TypingArea({
           )}
         </AnimatePresence>
 
-        {/* Text Display */}
         <div 
           ref={textContainerRef}
           className="font-mono text-xl md:text-2xl leading-[2] max-h-[200px] overflow-hidden relative"
@@ -355,14 +334,10 @@ export function TypingArea({
             {renderText()}
           </div>
           
-          {/* Gradient fade at bottom */}
           <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-card/80 to-transparent pointer-events-none" />
         </div>
-
-
       </motion.div>
 
-      {/* Reset Hint */}
       <motion.div 
         className="flex items-center justify-center gap-2 mt-4 text-muted-foreground text-sm"
         initial={{ opacity: 0 }}

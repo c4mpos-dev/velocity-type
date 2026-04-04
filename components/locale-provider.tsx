@@ -18,11 +18,9 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
   const [locale] = useState<Locale>('pt');
 
   const setLocale = useCallback(() => {
-    // No-op - only Portuguese supported
   }, []);
 
   const toggleLocale = useCallback(() => {
-    // No-op - only Portuguese supported
   }, []);
 
   const t = useCallback((key: TranslationKey): string => {
