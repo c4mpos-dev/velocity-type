@@ -1,6 +1,7 @@
 'use client';
 
-import { Keyboard, Github, Settings, BarChart3, Languages, Trophy, LogIn } from 'lucide-react';
+import { Settings, Trophy, LogIn } from 'lucide-react';
+import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { useLocaleContext } from '@/components/locale-provider';
 import { UserNav } from '@/components/user-nav';
@@ -18,8 +19,8 @@ export function Header({ onShowSettings, user }: HeaderProps) {
   return (
     <header className="flex items-center justify-between py-6">
       <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
-        <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-primary/10 text-primary shadow-lg shadow-primary/10">
-          <Keyboard className="w-5 h-5" />
+        <div className="flex items-center justify-center w-10 h-10">
+          <Image src="/favicon.png" alt="VelocityType" width={40} height={40} className="rounded-xl" />
         </div>
         <div className="hidden sm:block">
           <h1 className="text-xl font-bold tracking-tight text-foreground leading-none">

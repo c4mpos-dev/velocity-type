@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import { Space_Grotesk, JetBrains_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
-import './globals.css'
+import "./globals.css"
 
 const spaceGrotesk = Space_Grotesk({ 
   subsets: ["latin"],
@@ -20,21 +20,8 @@ export const metadata: Metadata = {
   keywords: ['typing test', 'wpm', 'typing speed', 'keyboard', 'practice'],
   authors: [{ name: 'Velocitytype' }],
   icons: {
-    icon: [
-      {
-        url: '/icon-light-32x32.png',
-        media: '(prefers-color-scheme: light)',
-      },
-      {
-        url: '/icon-dark-32x32.png',
-        media: '(prefers-color-scheme: dark)',
-      },
-      {
-        url: '/icon.svg',
-        type: 'image/svg+xml',
-      },
-    ],
-    apple: '/apple-icon.png',
+    icon: '/favicon.png',
+    apple: '/favicon.png',
   },
 }
 
