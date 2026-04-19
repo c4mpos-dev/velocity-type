@@ -46,6 +46,7 @@ export const viewport: Viewport = {
 
 import { Toaster } from '@/components/ui/sonner'
 import { LocaleProvider } from '@/components/locale-provider'
+import { Footer } from '@/components/typing/footer'
 
 export default function RootLayout({
   children,
@@ -54,9 +55,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR" className="dark">
-      <body className={`${spaceGrotesk.variable} ${jetbrainsMono.variable} font-sans antialiased`}>
+      <body className={`${spaceGrotesk.variable} ${jetbrainsMono.variable} font-sans antialiased flex flex-col min-h-screen`}>
         <LocaleProvider>
-          {children}
+          <div className="flex-1">
+            {children}
+          </div>
+          <Footer />
           <Toaster position="bottom-right" richColors />
           <Analytics />
         </LocaleProvider>

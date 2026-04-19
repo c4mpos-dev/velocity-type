@@ -16,7 +16,7 @@ export default function SignupPage() {
   const [showPassword, setShowPassword] = useState(false)
 
   return (
-    <div className="flex min-h-screen items-center justify-center p-4 bg-background relative overflow-hidden">
+    <div className="flex h-full mt-24 items-center justify-center p-4 bg-background relative overflow-hidden">
       <AnimatePresence>
         {isPending && (
           <motion.div

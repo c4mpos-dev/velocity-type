@@ -53,7 +53,7 @@ export default async function LeaderboardPage({
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
+    <div className="h-full flex flex-col bg-background">
       <div className="flex-1 container max-w-4xl mx-auto px-4">
         <Header user={user} />
         
@@ -183,11 +183,6 @@ export default async function LeaderboardPage({
               </Card>
           </div>
         </main>
-      </div>
-
-      <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
-        <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px]" />
-        <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-chart-4/5 rounded-full blur-[120px]" />
       </div>
     </div>
   )

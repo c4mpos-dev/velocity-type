@@ -213,12 +213,12 @@ export function Results({ stats, state, onRestart }: ResultsProps) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1 }}
-        className="flex items-center justify-center gap-4"
+        className="flex items-center justify-center gap-4 mt-6"
       >
         <Button
           onClick={onRestart}
           size="lg"
-          className="gap-2 px-8"
+          className="gap-2 px-8 "
         >
           <RotateCcw className="w-4 h-4" />
           {t('tryAgain')}
@@ -233,10 +233,6 @@ export function Results({ stats, state, onRestart }: ResultsProps) {
           {t('share')}
         </Button>
       </motion.div>
-
-      <div className="text-center mt-4 text-sm text-muted-foreground">
-        Pressione <kbd className="px-2 py-0.5 rounded bg-secondary font-mono text-xs">Tab</kbd> para reiniciar
-      </div>
     </motion.div>
   );
 }

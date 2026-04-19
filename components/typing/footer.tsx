@@ -7,12 +7,12 @@ export function Footer() {
   const { locale } = useLocaleContext();
 
   return (
-    <footer className="py-8 mt-auto">
-      <div className="flex justify-center text-sm text-muted-foreground">
-        <div className="flex items-center gap-4">
+    <footer className="w-full border-t border-border/50 bg-background/80 backdrop-blur supports-backdrop-filter:bg-background/60">
+      <div className="container max-w-4xl mx-auto px-4 py-6">
+        <div className="flex flex-col md:flex-row items-center justify-center gap-4 text-sm text-muted-foreground">
           <div className="flex items-center gap-1.5">
             <Keyboard className="w-4 h-4" />
-            <span>Velocitytype</span>
+            <span className="font-medium">Velocitytype</span>
           </div>
           <span className="hidden md:inline">•</span>
           <div className="flex items-center gap-1.5">

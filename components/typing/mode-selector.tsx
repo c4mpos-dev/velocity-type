@@ -50,7 +50,7 @@ export function ModeSelector({
               onClick={() => !disabled && onWordListChange(wl.value)}
               disabled={disabled}
               className={cn(
-                'flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200',
+                'flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 cursor-pointer',
                 wordList === wl.value
                   ? 'bg-accent/20 text-accent border border-accent/30 shadow-sm'
                   : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50',
@@ -74,7 +74,7 @@ export function ModeSelector({
               onClick={() => !disabled && onDurationChange(d)}
               disabled={disabled}
               className={cn(
-                'px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition-all duration-200',
+                'px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition-all duration-200 cursor-pointer',
                 duration === d
                   ? 'bg-primary/20 text-primary border border-primary/30 shadow-md'
                   : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50',

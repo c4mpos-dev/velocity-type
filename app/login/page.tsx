@@ -17,7 +17,7 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false)
 
   return (
-    <div className="flex min-h-screen items-center justify-center p-4 bg-background relative overflow-hidden">
+    <div className="flex mt-32 items-center justify-center p-4 bg-background relative overflow-hidden">
       <AnimatePresence>
         {isPending && (
           <motion.div

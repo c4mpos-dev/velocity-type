@@ -138,12 +138,17 @@ export function TypingArea({
   const renderText = () => {
     const chars = state.text.split('');
     
+    // Find the end of the first word
+    const firstWordEndIndex = state.text.indexOf(' ');
+    const firstWordEnd = firstWordEndIndex === -1 ? state.text.length : firstWordEndIndex;
+    
     return chars.map((char, index) => {
       const isTyped = index < state.currentIndex;
       const isCurrent = index === state.currentIndex;
       const isError = state.errors.has(index);
       const userChar = state.userInput[index];
       const isRecentError = lastError === index;
+      const isInFirstWord = index < firstWordEnd;
       
       let charClassName = 'relative inline-block transition-all ';
       
@@ -162,7 +167,12 @@ export function TypingArea({
       } else if (isCurrent) {
         charClassName += 'text-foreground';
       } else {
-        charClassName += 'text-pending';
+        // First word is highlighted more visibly
+        if (isInFirstWord) {
+          charClassName += 'text-foreground opacity-100 font-semibold';
+        } else {
+          charClassName += 'text-pending opacity-50';
+        }
       }
 
       return (
@@ -305,25 +315,6 @@ export function TypingArea({
               style={{ left: ripple.x, top: ripple.y }}
             />
           ))}
-        </AnimatePresence>
-
-        <AnimatePresence>
-          {!state.isStarted && !state.isFinished && (
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="absolute inset-0 flex items-center justify-center bg-background/60 backdrop-blur-sm rounded-2xl z-10 pointer-events-none"
-            >
-              <motion.p 
-                className="text-muted-foreground text-sm"
-                animate={{ opacity: [0.5, 1, 0.5] }}
-                transition={{ duration: 2, repeat: Infinity }}
-              >
-                {t('clickToStart')}
-              </motion.p>
-            </motion.div>
-          )}
         </AnimatePresence>
 
         <div 

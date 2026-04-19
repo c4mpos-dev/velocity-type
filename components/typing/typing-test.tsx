@@ -9,7 +9,6 @@ import { ModeSelector } from './mode-selector';
 import { TypingArea } from './typing-area';
 import { Results } from './results';
 import { SettingsPanel } from './settings-panel';
-import { Footer } from './footer';
 import { motion } from 'framer-motion';
 import { getUser, saveScore } from '@/lib/supabase/actions';
 import { toast } from 'sonner';
@@ -125,7 +124,7 @@ export function TypingTest({ initialUser }: TypingTestProps) {
   }, [setSoundCallbacks, playKeySound, playErrorSound, playFinishSound, playTickSound]);
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
+    <div className="h-full flex flex-col bg-background">
       <div className="flex-1 container max-w-4xl mx-auto px-4">
         <Header 
           onShowSettings={() => setShowSettings(true)}
@@ -170,11 +169,7 @@ export function TypingTest({ initialUser }: TypingTestProps) {
             />
           ) : null}
         </main>
-        
-        <Footer />
       </div>
-
-
 
       <SettingsPanel
         isOpen={showSettings}
