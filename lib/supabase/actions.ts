@@ -84,12 +84,18 @@ export async function saveScore(stats: {
     return { error: 'User must be logged in to save scores' }
   }
 
-  const { data: existingBest } = await supabase
+  const { data: existingBest, error: fetchError } = await supabase
     .from('leaderboard')
     .select('wpm')
     .eq('user_id', user.id)
     .eq('word_list', stats.wordList)
+    .order('wpm', { ascending: false })
     .maybeSingle()
+
+  if (fetchError) {
+    console.error('Error fetching existing best:', fetchError)
+    return { error: fetchError.message }
+  }
 
   const { error: profileError } = await supabase.from('profiles').upsert({
     id: user.id,
